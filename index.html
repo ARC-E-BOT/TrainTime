@@ -27,20 +27,6 @@
                     <th>Next Arrival</th>
                     <th>Minutes Away</th>
                 </tr>
-                <tr>
-                    <td>Jill</td>
-                    <td>Smith</td>
-                    <td>50</td>
-                    <td>Smith</td>
-                    <td>50</td>
-                </tr>
-                <tr>
-                    <td>Eve</td>
-                    <td>Jackson</td>
-                    <td>94</td>
-                    <td>Jackson</td>
-                    <td>94</td>
-                </tr>
             </table>
         </div>
     </div>
@@ -51,19 +37,20 @@
         </div>
         <div id="forum-div">
             <form>
-                    <a>Train Name</a><br>
-                    <input type="text" name="firstname"><br>
-                    <a>Destination</a><br>
-                    <input type="text" name="lastname">
-                    <a>First Train Time (HH:mm - military time)</a><br>
-                    <input type="text" name="firstname"><br>
-                    <a>Frequency</a><br>
-                    <input type="text" name="lastname">
-                    <button>Submit</button>
+                <a>Train Name</a><br>
+                <input type="text" id="train-name"><br>
+                <a>Destination</a><br>
+                <input type="text" id="destination">
+                <a>First Train Time (HH:mm - military time)</a><br>
+                <input type="text" id="first-train-time"><br>
+                <a>Frequency</a><br>
+                <input type="text" id="frequency">
+                <button id="submit-button" type="submit">Submit</button>
             </form>
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.7.3/localforage.js" integrity="sha256-3NP4l3uenVxIZ0vLGnUjjObImjaJltaSzAHaGUr+yDA=" crossorigin="anonymous"></script>
     <script src="./assets/javascript/app.js"></script>
 </body>
 
