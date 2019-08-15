@@ -59,18 +59,36 @@ function updateTable(){
 
         for(let i = 0; i<data.length; i++){
             const times = doTrainMath(data[i].trainTime, data[i].frequency);
-            const newTr = document.createElement("tr");
-            newTr.innerHTML = `
-            <th>${data[i].trainName}</th>
-            <th>${data[i].destination}</th>
-            <th>${data[i].frequency}</th>
-            <th>${times.arriveTime}</th>
-            <th>${times.minTillTrain}</th>`;
+            let newTr = document.createElement("tr");
+            const finalDataArr = [data[i].trainName, data[i].destination, data[i].frequency, times.arriveTime, times.minTillTrain];
+            for(let j = 0; j<finalDataArr.length; j++){
+                let newTh = newth(newTr, finalDataArr[j], finalDataArr[0]);
+                newTr.appendChild(newTh);
+            }
+
+            // newTr.innerHTML = `
+            // <th>${data[i].trainName}</th>
+            // <th>${data[i].destination}</th>
+            // <th>${data[i].frequency}</th>
+            // <th>${times.arriveTime}</th>
+            // <th>${times.minTillTrain}</th>`;
             table.appendChild(newTr);
         }
     })
 }
 
+function newth (newTr, content, identifier){
+    const th = document.createElement("th");
+    th.textContent = content;
+    th.addEventListener("click", function(){
+        const newInput = document.createElement("input");
+        newInput.value = this.textContent;
+        this.innerHTML = `<input type="text" value="${this.textContent}">`;
+    })
+    return th
+}
+
+//do math on the train times to get how long it wll be until the next train will arrive 
 function doTrainMath(trainTime, frequency){
 
     //take the first time of the train arriving at the station and set it to exactly 1 year ago to be positive that it is in the past
@@ -86,7 +104,7 @@ function doTrainMath(trainTime, frequency){
     minTillTrain = frequency - timeRemainder;
 
 
-
+    //return an object with the calculated times
     return {
         minTillTrain: minTillTrain,
         arriveTime: moment(moment().add(minTillTrain, "minutes")).format("hh:mm")
