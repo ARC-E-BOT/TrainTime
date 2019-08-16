@@ -1,21 +1,31 @@
+//if the submit button is pressed prevent it from doing anything other than running the submit forum function
 document.getElementById("submit-button").addEventListener("click", function(event){
     event.preventDefault();
     submitForum();
 })
 
+//update the table on load of page
 updateTable();
 
+//set a 1 min interval that runs the update table function ever 60 seconds
 setInterval(function(){
     updateTable();
 },60000)
 
+/*
+    this function gets the data from all of the text boxes and save the data to an object in an array in local storage via localForage
+*/
 function submitForum(){
+
+    //make a data object based on the data in the input boxes 
     const trainData = {
         trainName: document.getElementById("train-name").value,
         destination: document.getElementById("destination").value,
         trainTime: document.getElementById("first-train-time").value,
         frequency: document.getElementById("frequency").value
     }
+
+    //run the get data function by passing in a callback function that checks if the response data is null and creates the local storage else it will add the new object to the current array and run the forage set data function  
     forageGetData(function(data){
         if(data === null){
             forageSetData([trainData]);
@@ -23,6 +33,8 @@ function submitForum(){
             data.push(trainData);
             forageSetData(data);
         }
+
+        //clear all of the text fields to signal that the data has been submitted 
         document.getElementById("train-name").value = "";
         document.getElementById("destination").value = "";
         document.getElementById("first-train-time").value = "";
@@ -30,23 +42,29 @@ function submitForum(){
     })
 }
 
-
+//this function tries to get data from local storage via local forage, if no data is found the "data" variable that gets passed to the passed in callback function = null
 function forageGetData(cb){
     localforage.getItem("dataArr").then(data => {
         cb(data);
     })
 }
 
-
+//this function takes the passed in array and saves it to local storage via local forage 
 function forageSetData(localArr){
     localforage.setItem("dataArr", localArr).then(data => {
         return data;
     })
 }
 
+//this function updates the table 
 function updateTable(){
+
+    //here we are running the forage get data function with a callback function that clears the table and sets it back up 
     forageGetData(function(data){
+        //if nothing in local storage then return and do nothing else
         if (data === null) return;
+
+        //get the table element and set its innerHTML with the table headers so you know what colum is what
         const table = document.getElementById("data-table");
         table.innerHTML = `
         <tr>
@@ -57,8 +75,13 @@ function updateTable(){
             <th>Minutes Away</th>
         </tr>`;
 
+        //loop through the array passed back via the callback function, do math on that data to display proper times, and create rows for said data 
         for(let i = 0; i<data.length; i++){
+
+            //do the calculations to determine when the next train will arrive
             const times = doTrainMath(data[i].trainTime, data[i].frequency);
+
+            //create the new row for the table and set is children based on the data we are looping through
             const newTr = document.createElement("tr");
             newTr.innerHTML = `
             <th>${data[i].trainName}</th>
@@ -66,11 +89,14 @@ function updateTable(){
             <th>${data[i].frequency}</th>
             <th>${times.arriveTime}</th>
             <th>${times.minTillTrain}</th>`;
+
+            //append this new row to the table
             table.appendChild(newTr);
         }
     })
 }
 
+//to math to calculate train times
 function doTrainMath(trainTime, frequency){
 
     //take the first time of the train arriving at the station and set it to exactly 1 year ago to be positive that it is in the past
@@ -86,7 +112,7 @@ function doTrainMath(trainTime, frequency){
     minTillTrain = frequency - timeRemainder;
 
 
-
+    //return a object that contains variables of times 
     return {
         minTillTrain: minTillTrain,
         arriveTime: moment(moment().add(minTillTrain, "minutes")).format("hh:mm")
