@@ -6,7 +6,7 @@ ever need to calculate when a train is next going to arrive well look no further
 - sit back and watch the magic
 
 # use it!
-https://arc-e-bot.github.io/TrainTime/
+https://coop25.github.io/TrainTime/
 
 # ToDo
 - [x] make page look like Bootstrap but not actually use Bootstrap
